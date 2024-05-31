@@ -2,5 +2,5 @@
 # Define the function to process the log file
 
 # Parse the Apache log file and group by IP and HTTP status code, then count occurrences
-awk '{print $1, $9}' access.log | awk '{count[$0]++} END {for (line in count) print count[line], line}' | sort -nr
+awk '{print $1, $9}' access.log | sort | uniq -c | sort -nr
 
