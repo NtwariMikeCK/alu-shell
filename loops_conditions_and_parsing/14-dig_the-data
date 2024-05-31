@@ -1,26 +1,6 @@
 #!/usr/bin/env bash
 # Define the function to process the log file
 
-# Path to the Apache log file
-log_file="/path/to/your/apache_log_file.log"
+# Parse the Apache log file and group by IP and HTTP status code, then count occurrences
+awk '{print $1, $9}' access.log | awk '{count[$0]++} END {for (line in count) print count[line], line}' | sort -nr
 
-# Use awk to process the log file
-awk '{
-    # Extract IP and HTTP status code
-    ip = $1
-    status_code = $9
-    # Create a unique key combining IP and status code
-    key = ip " " status_code
-    # Increment the count for this key
-    count[key]++
-}
-END {
-    # Output the counts
-    for (k in count) {
-        print count[k], k
-    }
-}' "$log_file" |
-# Sort the output by the number of occurrences in descending order
-sort -nr |
-# Print the sorted list
-awk '{print $1, $2, $3}'
