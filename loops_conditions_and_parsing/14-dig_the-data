@@ -1,28 +1,26 @@
 #!/usr/bin/env bash
 # Define the function to process the log file
-process_log_file() {
-  filename="$1"
 
-  if [[ ! -f "$filename" ]]; then
-    echo "Error: Log file not found"
-    return 1
-  fi
+# Path to the Apache log file
+log_file="/path/to/your/apache_log_file.log"
 
-  # Use awk to process the log file and group visitors by IP and HTTP status code
-  awk '
-    {
-      ip_count[$2][$3]++
-    }
-    END {
-      # Print the grouped data in the required format
-      for (ip in ip_count) {
-        for (code in ip_count[ip]) {
-          printf("%d %s %d\n", ip_count[ip][code], ip, code)
-        }
-      }
-    }
-  ' "$filename" | sort -nr
+# Use awk to process the log file
+awk '{
+    # Extract IP and HTTP status code
+    ip = $1
+    status_code = $9
+    # Create a unique key combining IP and status code
+    key = ip " " status_code
+    # Increment the count for this key
+    count[key]++
 }
-
-# Example usage:
-process_log_file 'your_log_file.log'
+END {
+    # Output the counts
+    for (k in count) {
+        print count[k], k
+    }
+}' "$log_file" |
+# Sort the output by the number of occurrences in descending order
+sort -nr |
+# Print the sorted list
+awk '{print $1, $2, $3}'
