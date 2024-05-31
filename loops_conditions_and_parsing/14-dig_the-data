@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# Define the function to process the log file
+process_log_file() {
+  filename="$1"
+
+  if [[ ! -f "$filename" ]]; then
+    echo "Error: Log file not found"
+    return 1
+  fi
+
+  # Use awk to process the log file and group visitors by IP and HTTP status code
+  awk '
+    {
+      ip_count[$2][$3]++
+    }
+    END {
+      # Print the grouped data in the required format
+      for (ip in ip_count) {
+        for (code in ip_count[ip]) {
+          printf("%d %s %d\n", ip_count[ip][code], ip, code)
+        }
+      }
+    }
+  ' "$filename" | sort -nr
+}
+
+# Example usage:
+process_log_file 'your_log_file.log'
