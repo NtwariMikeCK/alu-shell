@@ -1,0 +1,30 @@
+#!/bin/bash
+
+echo "Enter your choice: start, stop, or restart"
+read choice
+
+if [ "$choice" = "start" ]; then
+    echo "Starting the service..."
+elif [ "$choice" = "stop" ]; then
+    echo "Stopping the service..."
+elif [ "$choice" = "restart" ]; then
+    echo "Restarting the service..."
+else
+    echo "Invalid choice. Please enter start, stop, or restart."
+fi
+
+echo "Enter a character:"
+read char
+
+case $char in
+    [a-zA-Z])
+        echo "You entered a letter."
+        ;;
+    [0-9])
+        echo "You entered a digit."
+        ;;
+    *)
+        echo "You entered a special character."
+        ;;
+esac
+
